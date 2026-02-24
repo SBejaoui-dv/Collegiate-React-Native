@@ -3,7 +3,11 @@ import { Redirect, Stack } from 'expo-router';
 import { useAuth } from '@/app/features/auth/store/auth.context';
 
 export default function AuthLayout() {
-  const { user } = useAuth();
+  const { user, isHydrating } = useAuth();
+
+  if (isHydrating) {
+    return null;
+  }
 
   if (user) {
     return <Redirect href="/(protected)/(tabs)/dashboard" />;
