@@ -1,8 +1,10 @@
-import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
 
 import {
+  clearSession,
   forgotPassword,
   resetPassword,
+  restoreUserFromSession,
   signIn,
   signUp,
 } from '@/app/features/auth/services/auth.service';
@@ -16,6 +18,7 @@ import {
 
 type AuthContextValue = {
   user: AuthUser | null;
+  isHydrating: boolean;
   signIn: (payload: SignInPayload) => Promise<AuthUser>;
   signUp: (payload: SignUpPayload) => Promise<AuthUser>;
   forgotPassword: (payload: ForgotPasswordPayload) => Promise<void>;
@@ -27,10 +30,35 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [isHydrating, setIsHydrating] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const hydrate = async () => {
+      try {
+        const restoredUser = await restoreUserFromSession();
+        if (isMounted) {
+          setUser(restoredUser);
+        }
+      } finally {
+        if (isMounted) {
+          setIsHydrating(false);
+        }
+      }
+    };
+
+    void hydrate();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
+      isHydrating,
       signIn: async (payload) => {
         const loggedInUser = await signIn(payload);
         setUser(loggedInUser);
@@ -45,9 +73,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
       resetPassword,
       signOut: () => {
         setUser(null);
+        void clearSession();
       },
     }),
-    [user],
+    [isHydrating, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
