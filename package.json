@@ -8,7 +8,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "api:setup": "python3 -m pip install -r api/requirements.txt",
+    "api:start": "python3 api/app.py"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

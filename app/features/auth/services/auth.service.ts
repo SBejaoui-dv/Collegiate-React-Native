@@ -155,6 +155,13 @@ async function readSession(): Promise<PersistedSession | null> {
   }
 }
 
+export async function getAccessToken(): Promise<string | null> {
+  // Ensure token is still valid and refresh it when needed before API calls.
+  await restoreUserFromSession();
+  const session = await readSession();
+  return session?.accessToken ?? null;
+}
+
 export async function clearSession(): Promise<void> {
   if (Platform.OS === 'web') {
     if (typeof localStorage !== 'undefined') {

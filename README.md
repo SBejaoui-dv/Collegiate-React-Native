@@ -1,50 +1,54 @@
-# Welcome to your Expo app 👋
+# Collegiate React Native
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Frontend Setup
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+1. Install dependencies:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Create `.env` in project root:
 
-## Learn more
+```env
+EXPO_PUBLIC_SUPABASE_URL=...
+EXPO_PUBLIC_SUPABASE_ANON_KEY=...
+EXPO_PUBLIC_PASSWORD_RESET_REDIRECT_URL=collegiate://reset-password
+EXPO_PUBLIC_API_URL=http://localhost:5001
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+3. Start Expo:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npx expo start -c
+```
 
-## Join the community
+## Backend Setup (Flask)
 
-Join our community of developers creating universal apps.
+1. Create `api/.env` from `api/.env.example` and add your College Scorecard key:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```env
+COLLEGE_SCORECARD_BASE_URL=https://api.data.gov/ed/collegescorecard/v1/schools
+COLLEGE_SCORECARD_API_KEY=...
+```
+
+2. Install backend dependencies:
+
+```bash
+npm run api:setup
+```
+
+3. Start backend API:
+
+```bash
+npm run api:start
+```
+
+Backend runs on `http://localhost:5001` and exposes:
+- `GET /api/college/search`
+
+## Mobile Networking Notes
+
+- iOS Simulator: use `EXPO_PUBLIC_API_URL=http://localhost:5001`
+- Android Emulator: use `EXPO_PUBLIC_API_URL=http://10.0.2.2:5001`
+- Physical device: use your computer LAN IP, e.g. `http://172.16.x.x:5001`
