@@ -233,10 +233,11 @@ def analyze_resume():
 
 @openai_routes.route('/upload-resume', methods=['POST'])
 def upload_resume():
-  if 'resume' not in request.files:
-    return jsonify({'error': "Missing 'resume' file in form data"}), 400
+  resume_file = request.files.get('resume') or request.files.get('file')
+  if not resume_file:
+    available_keys = list(request.files.keys())
+    return jsonify({'error': "Missing 'resume' file in form data", 'file_keys': available_keys}), 400
 
-  resume_file = request.files['resume']
   if not resume_file.filename:
     return jsonify({'error': 'Missing uploaded filename'}), 400
 

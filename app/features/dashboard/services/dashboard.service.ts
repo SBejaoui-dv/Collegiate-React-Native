@@ -8,6 +8,11 @@ type SavedCollege = {
   college_name: string;
   city?: string;
   state?: string;
+  school_url?: string;
+  student_size?: number | null;
+  tuition_in_state?: number | null;
+  tuition_out_of_state?: number | null;
+  admission_rate?: number | null;
 };
 
 async function withAuthHeaders() {
@@ -38,6 +43,8 @@ export async function listDashboardColleges(): Promise<SavedCollege[]> {
 
   return (payload?.colleges || []) as SavedCollege[];
 }
+
+export type { SavedCollege };
 
 export async function addCollegeToDashboard(college: College): Promise<void> {
   const headers = await withAuthHeaders();
