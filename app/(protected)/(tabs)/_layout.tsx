@@ -13,6 +13,7 @@ export default function ProtectedTabsLayout() {
         tabBarIcon: ({ color, size }) => {
           const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
             dashboard: 'grid-outline',
+            'paying-for-college': 'cash-outline',
             search: 'search-outline',
             tasks: 'checkmark-done-outline',
             'essay-guidance': 'create-outline',
@@ -24,6 +25,7 @@ export default function ProtectedTabsLayout() {
       })}
     >
       <Tabs.Screen name="dashboard" options={{ title: 'Dashboard' }} />
+      <Tabs.Screen name="paying-for-college" options={{ title: 'Paying' }} />
       <Tabs.Screen name="search" options={{ title: 'Search' }} />
       <Tabs.Screen name="tasks" options={{ title: 'Tasks' }} />
       <Tabs.Screen name="essay-guidance" options={{ title: 'Essay' }} />
