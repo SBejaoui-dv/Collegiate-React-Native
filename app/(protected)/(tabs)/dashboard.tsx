@@ -8,6 +8,7 @@ import {
   listDashboardColleges,
   removeCollegeFromDashboard,
 } from '@/app/features/dashboard/services/dashboard.service';
+import { getSavedScholarships } from '@/app/features/search/services/scholarship-storage.service';
 import type { SavedCollege } from '@/app/features/dashboard/services/dashboard.service';
 import { getPendingTasksCount } from '@/app/features/tasks/services/task.service';
 import { Screen } from '@/components/ui/Screen';
@@ -16,6 +17,7 @@ import { colors } from '@/constants/theme';
 export default function DashboardScreen() {
   const { user, signOut } = useAuth();
   const [savedColleges, setSavedColleges] = useState<SavedCollege[]>([]);
+  const [savedScholarshipsCount, setSavedScholarshipsCount] = useState(0);
   const [pendingTasksCount, setPendingTasksCount] = useState(0);
   const [searchFilter, setSearchFilter] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -31,8 +33,10 @@ export default function DashboardScreen() {
         listDashboardColleges(),
         getPendingTasksCount(),
       ]);
+      const scholarships = await getSavedScholarships();
       setSavedColleges(colleges);
       setPendingTasksCount(tasksCount);
+      setSavedScholarshipsCount(scholarships.length);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : 'Failed to load dashboard.');
     } finally {
@@ -89,6 +93,11 @@ export default function DashboardScreen() {
           <Text style={styles.statLabel}>Pending Tasks</Text>
           <Text style={styles.statValue}>{pendingTasksCount}</Text>
           <Text style={styles.statHint}>Open the Tasks tab to manage</Text>
+        </View>
+        <View style={[styles.statCard, styles.statCardTertiary]}>
+          <Text style={styles.statLabel}>Saved Scholarships</Text>
+          <Text style={styles.statValue}>{savedScholarshipsCount}</Text>
+          <Text style={styles.statHint}>Ready-to-apply opportunities</Text>
         </View>
       </View>
 
@@ -173,6 +182,10 @@ export default function DashboardScreen() {
         )}
       </View>
 
+      <Pressable style={styles.settingsButton} onPress={() => router.push('/(protected)/settings')}>
+        <Text style={styles.settingsButtonText}>Open Settings</Text>
+      </Pressable>
+
       <Pressable
         style={styles.signOutButton}
         onPress={() => {
@@ -228,6 +241,10 @@ const styles = StyleSheet.create({
   statCardSecondary: {
     backgroundColor: '#EFF6FF',
     borderColor: '#BFDBFE',
+  },
+  statCardTertiary: {
+    backgroundColor: '#ECFDF5',
+    borderColor: '#A7F3D0',
   },
   statLabel: {
     color: colors.mutedText,
@@ -374,6 +391,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 12,
     alignItems: 'center',
+  },
+  settingsButton: {
+    marginTop: 4,
+    backgroundColor: colors.primary,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: 10,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  settingsButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
   },
   signOutText: {
     color: colors.text,

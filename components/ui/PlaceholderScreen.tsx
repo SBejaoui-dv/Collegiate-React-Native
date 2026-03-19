@@ -5,7 +5,19 @@ import { colors } from '@/constants/theme';
 import { Screen } from '@/components/ui/Screen';
 
 type QuickLink = {
-  href: '/(public)' | '/(auth)/login' | '/(auth)/signup' | '/(protected)/(tabs)/dashboard' | '/(protected)/(tabs)/search' | '/(protected)/(tabs)/tasks' | '/(protected)/(tabs)/essay-guidance' | '/(protected)/(tabs)/resume-guidance' | '/(protected)/profile' | '/(protected)/counselor-dashboard' | '/financial-aid';
+  href:
+    | '/(public)'
+    | '/(auth)/login'
+    | '/(auth)/signup'
+    | '/(protected)/(tabs)/dashboard'
+    | '/(protected)/(tabs)/search'
+    | '/(protected)/(tabs)/tasks'
+    | '/(protected)/(tabs)/essay-guidance'
+    | '/(protected)/(tabs)/resume-guidance'
+    | '/(protected)/profile'
+    | '/(protected)/settings'
+    | '/(protected)/counselor-dashboard'
+    | '/financial-aid';
   label: string;
 };
 

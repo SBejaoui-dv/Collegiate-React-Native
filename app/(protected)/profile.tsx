@@ -6,7 +6,10 @@ export default function ProfileScreen() {
       title="Profile"
       subtitle="Student Profile"
       description="Structure for viewing and editing academic, personal, and preference info."
-      links={[{ href: '/(protected)/(tabs)/dashboard', label: 'Back to Dashboard' }]}
+      links={[
+        { href: '/(protected)/settings', label: 'Open Settings' },
+        { href: '/(protected)/(tabs)/dashboard', label: 'Back to Dashboard' },
+      ]}
     />
   );
 }
