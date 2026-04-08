@@ -3,13 +3,27 @@ import {
   OutlineResponses,
   OutlineResult,
 } from '@/app/features/essay-guidance/types/essay-guidance.types';
+import { getAccessToken } from '@/app/features/auth/services/auth.service';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5001';
 
+async function withAuthHeaders() {
+  const token = await getAccessToken();
+  if (!token) {
+    throw new Error('You must be logged in to use AI features.');
+  }
+
+  return {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  };
+}
+
 export async function generateOutline(responses: OutlineResponses): Promise<OutlineResult> {
+  const headers = await withAuthHeaders();
   const response = await fetch(`${API_URL}/api/openai/generate-outline`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(responses),
   });
 
@@ -22,9 +36,10 @@ export async function generateOutline(responses: OutlineResponses): Promise<Outl
 }
 
 export async function gradeEssay(essay: string, context?: string): Promise<EssayGrade> {
+  const headers = await withAuthHeaders();
   const response = await fetch(`${API_URL}/api/openai/grade-essay`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify({
       essay,
       context,

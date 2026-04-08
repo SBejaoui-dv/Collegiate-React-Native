@@ -18,6 +18,7 @@ export default function ProtectedLayout() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="profile" options={{ title: 'Profile' }} />
       <Stack.Screen name="settings" options={{ title: 'Settings' }} />
+      <Stack.Screen name="premium" options={{ title: 'Premium' }} />
       <Stack.Screen name="counselor-dashboard" options={{ title: 'Counselor Dashboard' }} />
     </Stack>
   );
