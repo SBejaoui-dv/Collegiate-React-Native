@@ -25,11 +25,19 @@ npx expo start -c
 
 ## Backend Setup (Flask)
 
-1. Create `api/.env` from `api/.env.example` and add your College Scorecard key:
+1. Create `api/.env` from `api/.env.example` and add required keys:
 
 ```env
 COLLEGE_SCORECARD_BASE_URL=https://api.data.gov/ed/collegescorecard/v1/schools
 COLLEGE_SCORECARD_API_KEY=...
+SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+SUPABASE_KEY=YOUR_SUPABASE_ANON_KEY
+SUPABASE_SECRET_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PRICE_ID=price_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+FRONTEND_URL=http://localhost:8081
+FREE_DAILY_TOKEN_LIMIT=5
 ```
 
 2. Install backend dependencies:
@@ -46,6 +54,11 @@ npm run api:start
 
 Backend runs on `http://localhost:5001` and exposes:
 - `GET /api/college/search`
+- `POST /api/stripe/create-checkout-session`
+- `POST /api/stripe/create-portal-session`
+- `GET /api/stripe/subscription-status`
+- `POST /api/stripe/webhook`
+- `GET /api/tokens/status`
 
 ## Mobile Networking Notes
 

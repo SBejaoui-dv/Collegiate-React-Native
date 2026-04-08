@@ -154,6 +154,9 @@ export default function SettingsScreen() {
         <Pressable style={styles.secondaryButton} onPress={handleResetDefaults}>
           <Text style={styles.secondaryButtonText}>Reset to Defaults</Text>
         </Pressable>
+        <Pressable style={styles.premiumButton} onPress={() => router.push('/(protected)/premium')}>
+          <Text style={styles.premiumButtonText}>Open Premium & Billing</Text>
+        </Pressable>
         {resetDone ? <Text style={styles.successText}>Preferences reset successfully.</Text> : null}
       </View>
 
@@ -353,6 +356,17 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: '#312E81',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  premiumButton: {
+    borderRadius: 10,
+    backgroundColor: '#F59E0B',
+    paddingVertical: 11,
+    alignItems: 'center',
+  },
+  premiumButtonText: {
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '700',
   },

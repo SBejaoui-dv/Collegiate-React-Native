@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from flask import Blueprint, jsonify, request
 from openai import OpenAI
 
+from utils.token_manager import require_tokens
+
 API_ENV_PATH = Path(__file__).resolve().parent.parent / '.env'
 load_dotenv(API_ENV_PATH)
 
@@ -77,6 +79,7 @@ def extract_text_from_uploaded_file(file_path: str, filename: str) -> str:
 
 
 @openai_routes.route('/generate-outline', methods=['POST'])
+@require_tokens(cost=1, feature='generate_outline')
 def generate_outline():
   payload = request.get_json(silent=True) or {}
 
@@ -123,6 +126,7 @@ def generate_outline():
 
 
 @openai_routes.route('/grade-essay', methods=['POST'])
+@require_tokens(cost=1, feature='grade_essay')
 def grade_essay():
   payload = request.get_json(silent=True) or {}
   essay = (payload.get('essay') or '').strip()
@@ -217,6 +221,7 @@ def grade_essay():
 
 
 @openai_routes.route('/analyze-resume', methods=['POST'])
+@require_tokens(cost=1, feature='analyze_resume')
 def analyze_resume():
   payload = request.get_json(silent=True) or {}
   resume_text = (payload.get('resume_text') or '').strip()
@@ -232,6 +237,7 @@ def analyze_resume():
 
 
 @openai_routes.route('/upload-resume', methods=['POST'])
+@require_tokens(cost=1, feature='upload_resume')
 def upload_resume():
   resume_file = request.files.get('resume') or request.files.get('file')
   if not resume_file:

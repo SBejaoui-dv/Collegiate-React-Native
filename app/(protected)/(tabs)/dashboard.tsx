@@ -11,6 +11,7 @@ import {
 import { getSavedScholarships } from '@/app/features/search/services/scholarship-storage.service';
 import type { SavedCollege } from '@/app/features/dashboard/services/dashboard.service';
 import { getPendingTasksCount } from '@/app/features/tasks/services/task.service';
+import { TokenDisplay } from '@/app/features/subscription/components/TokenDisplay';
 import { Screen } from '@/components/ui/Screen';
 import { colors } from '@/constants/theme';
 
@@ -79,7 +80,10 @@ export default function DashboardScreen() {
   return (
     <Screen>
       <View style={styles.heroCard}>
-        <Text style={styles.title}>My Dashboard</Text>
+        <View style={styles.heroRow}>
+          <Text style={styles.title}>My Dashboard</Text>
+          <TokenDisplay />
+        </View>
         <Text style={styles.subtitle}>Welcome back, {user?.fullName ?? 'Student'}.</Text>
       </View>
 
@@ -186,6 +190,10 @@ export default function DashboardScreen() {
         <Text style={styles.settingsButtonText}>Open Settings</Text>
       </Pressable>
 
+      <Pressable style={styles.premiumButton} onPress={() => router.push('/(protected)/premium')}>
+        <Text style={styles.premiumButtonText}>Premium & Billing</Text>
+      </Pressable>
+
       <Pressable
         style={styles.signOutButton}
         onPress={() => {
@@ -213,6 +221,12 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     fontWeight: '700',
     color: colors.text,
+  },
+  heroRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 8,
   },
   subtitle: {
     fontSize: 15,
@@ -402,6 +416,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   settingsButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  premiumButton: {
+    marginTop: 4,
+    backgroundColor: '#F59E0B',
+    borderWidth: 1,
+    borderColor: '#F59E0B',
+    borderRadius: 10,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  premiumButtonText: {
     color: '#FFFFFF',
     fontWeight: '700',
   },
