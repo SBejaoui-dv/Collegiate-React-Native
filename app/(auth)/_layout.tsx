@@ -10,7 +10,15 @@ export default function AuthLayout() {
   }
 
   if (user) {
-    return <Redirect href="/(protected)/(tabs)/dashboard" />;
+    return (
+      <Redirect
+        href={
+          user.role === 'counselor'
+            ? '/(protected)/(counselor-tabs)/overview'
+            : '/(protected)/(tabs)/dashboard'
+        }
+      />
+    );
   }
 
   return (

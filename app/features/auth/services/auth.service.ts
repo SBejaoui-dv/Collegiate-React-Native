@@ -32,6 +32,9 @@ type SupabaseAuthResponse = {
   session?: SupabaseSession | null;
   access_token?: string;
   refresh_token?: string;
+  id?: string;
+  email?: string | null;
+  user_metadata?: Record<string, unknown>;
 };
 
 const SESSION_STORAGE_KEY = 'collegiate.auth.session';
@@ -97,6 +100,26 @@ function extractSession(body: SupabaseAuthResponse): SupabaseSession | null {
     return {
       access_token: body.access_token,
       refresh_token: body.refresh_token,
+    };
+  }
+
+  return null;
+}
+
+function extractUser(body: SupabaseAuthResponse | null): SupabaseUser | null {
+  if (!body) {
+    return null;
+  }
+
+  if (body.user?.id) {
+    return body.user;
+  }
+
+  if (body.id) {
+    return {
+      id: body.id,
+      email: body.email,
+      user_metadata: body.user_metadata,
     };
   }
 
@@ -233,14 +256,15 @@ async function refreshSession(refreshToken: string): Promise<SupabaseSession | n
 
 async function persistIfSessionPresent(body: SupabaseAuthResponse): Promise<void> {
   const session = extractSession(body);
-  if (!session?.access_token || !body.user) {
+  const user = extractUser(body);
+  if (!session?.access_token || !user) {
     return;
   }
 
   await writeSession({
     accessToken: session.access_token,
     refreshToken: session.refresh_token,
-    user: mapSupabaseUser(body.user),
+    user: mapSupabaseUser(user),
   });
 }
 
@@ -305,13 +329,14 @@ export async function signIn(payload: SignInPayload): Promise<AuthUser> {
 
   const body = (await response.json().catch(() => null)) as SupabaseAuthResponse | null;
 
-  if (!response.ok || !body?.user) {
+  const user = extractUser(body);
+  if (!response.ok || !user) {
     throw new Error(toErrorMessage(body, 'Unable to sign in.'));
   }
 
   await persistIfSessionPresent(body);
 
-  return mapSupabaseUser(body.user);
+  return mapSupabaseUser(user);
 }
 
 export async function signUp(payload: SignUpPayload): Promise<AuthUser> {
@@ -336,13 +361,19 @@ export async function signUp(payload: SignUpPayload): Promise<AuthUser> {
 
   const body = (await response.json().catch(() => null)) as SupabaseAuthResponse | null;
 
-  if (!response.ok || !body?.user) {
+  const user = extractUser(body);
+  if (!response.ok || !user) {
     throw new Error(toErrorMessage(body, 'Unable to create account.'));
+  }
+
+  const session = extractSession(body);
+  if (!session?.access_token) {
+    throw new Error('Account created. Check your email to verify your account, then sign in.');
   }
 
   await persistIfSessionPresent(body);
 
-  return mapSupabaseUser(body.user);
+  return mapSupabaseUser(user);
 }
 
 export async function forgotPassword(payload: ForgotPasswordPayload): Promise<void> {
