@@ -35,7 +35,7 @@ export default function SignupCounselorScreen() {
         password,
         role: 'counselor',
       });
-      router.replace('/(protected)/(tabs)/dashboard');
+      router.replace('/(protected)/(counselor-tabs)/overview');
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Unable to create account.');
     } finally {

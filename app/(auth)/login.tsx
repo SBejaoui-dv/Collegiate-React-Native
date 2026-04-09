@@ -21,8 +21,12 @@ export default function LoginScreen() {
 
     setIsSubmitting(true);
     try {
-      await signIn({ email, password });
-      router.replace('/(protected)/(tabs)/dashboard');
+      const loggedInUser = await signIn({ email, password });
+      router.replace(
+        loggedInUser.role === 'counselor'
+          ? '/(protected)/(counselor-tabs)/overview'
+          : '/(protected)/(tabs)/dashboard',
+      );
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Unable to sign in.');
     } finally {
